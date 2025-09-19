@@ -40,7 +40,7 @@
   </div>
 
   <script>
-    const GAS_WEB_APP = "https://script.google.com/macros/s/AKfycbwp-n61o5_yRsAH-cM8lugTA9Qrsvd0e-Ubk7qt4r3CNzI6VTkRS63ddfbxvPIORTKjsA/exec"; // ganti URL Apps Script Web App Anda
+    const GAS_WEB_APP = "https://script.google.com/macros/s/AKfycbwSM281pYAzn9Q-oiTFUCmnfaRyPl6NMwbluTEmPb_fCIRH0xc989SxWcnYpRLk4YF8ew/exec"; // ganti URL Apps Script Web App Anda
 
     // API wrapper dengan action
     async function api(action, data = null) {
@@ -59,28 +59,23 @@
 
     // LOGIN FUNCTION
     async function login() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const msg = document.getElementById("loginMsg");
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-      msg.classList.add("hidden");
-      msg.innerText = "";
+    try {
+      const res = await fetch(GAS_WEB_APP + "?action=login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-      try {
-        const result = await api("login", { username, password });
-        if (result.success) {
-          // tampilkan dashboard
-          document.getElementById("loginPage").classList.add("hidden");
-          document.getElementById("dashboardPage").classList.remove("hidden");
-        } else {
-          msg.innerText = result.message || "Login gagal";
-          msg.classList.remove("hidden");
-        }
-      } catch (err) {
-        msg.innerText = "Error: " + err.message;
-        msg.classList.remove("hidden");
-      }
+      const data = await res.json();
+      alert(data.message);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal terhubung ke server");
     }
+  }
 
     // LOGOUT FUNCTION
     function logout() {
@@ -96,6 +91,7 @@
 
 </body>
 </html>
+
 
 
 
